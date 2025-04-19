@@ -1,0 +1,9 @@
+Flask
+pandas
+python-dotenv
+openai
+scikit-learn
+numpy
+google-generativeai
+gunicorn
+

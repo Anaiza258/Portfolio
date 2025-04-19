@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio Chatbot</title>
+  <!-- Material Icons -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+  <!-- Include FontAwesome for social icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+
+<body>
+  
+
+  <div class="app-container">
+    <!-- Left Column: Portfolio Content -->
+    <div class="projects-column">
+      <!-- Profile Section -->
+      <div class="profile-section">
+        <div class="profile-info">
+          <h1 class="profile-name">Anaiza Tariq</h1>
+          <p class="profile-tagline">AI/ML  &amp; Generative AI Practitioner</p>
+          <div class="social-links">
+            <a href="https://github.com/" class="social-link"  target="_blank"  rel="noopener noreferrer" title="GitHub">
+              <i class="fab fa-github"></i>
+            </a>
+            <a href="https://linkedin.com/" class="social-link"  target="_blank"  rel="noopener noreferrer" title="LinkedIn">
+              <i class="fab fa-linkedin"></i>
+            </a>
+            <a href="https://facebook.com/" class="social-link"  target="_blank"  rel="noopener noreferrer" title="Facebook">
+              <i class="fab fa-facebook"></i> 
+            </a>
+          </div>
+        </div> 
+      </div>
+      <!-- Navigation Menu -->
+      <nav class="portfolio-nav" data-active="projects">
+         <button class="nav-item active" data-section="projects">Projects</button>
+         <button class="nav-item" data-section="skills">Skills</button>
+         <button class="nav-item" data-section="education">Education</button>
+         <button class="nav-item" data-section="contact">Contact</button>
+      </nav>
+      <!-- Content Sections Container -->
+      <div class="content-sections">
+
+         <!-- Projects Section  -->
+         <section id="projects" class="section active">
+            <div class="projects-box">
+               <div  class="projects-grid">
+                 <!-- Project cards will be added here dynamically (via createProjectCards) -->
+               </div>
+            </div>
+         </section>
+         <!-- Skills Section -->
+         <section id="skills" class="section">
+          <div class="skills-container">
+            <ul class="skills-list">
+              <li>
+                <strong>Programming Language:</strong> Python
+              </li>
+              <li>
+                <strong>ML/DL Libs:</strong> scikit-learn, XGBoost, TensorFlow,
+                Keras, PyTorch
+              </li>
+              <li>
+                <strong>NLP:</strong> NLTK, SpaCy
+              </li>
+              <li>
+                <strong>ML Algorithms:</strong> Linear Regression, Decision Trees,
+                Random Forests, SVM, KNN, Naive Bayes
+              </li>
+              <li>
+                <strong>Neural Networks:</strong> CNN, RNN, LSTM, GAN, Transformer,
+                Autoencoder
+              </li>
+              <li>
+                <strong>Generative AI &amp; RAG:</strong> GPT &amp; Open-source models,
+                RAG Systems
+              </li>
+              <li>
+                <strong>Chatbot Development:</strong> Custom chatbot data integration,
+                conversational design, and robust dialogue management
+              </li>
+              <li>
+                <strong>AI Web Apps:</strong> Flask for building interactive,
+                powerful AI application interfaces
+              </li>
+            </ul>
+          </div>
+         </section>
+         <!-- Education Section -->
+         <section id="education" class="section">
+             <div class="education-container">
+                <div class="education-item">
+                   <h3 class="degree">Bachelor of Computer Science</h3>
+                   <p class="institution">Virtual University of Pakistan</p>
+                   <p class="year">2022 - 2026</p>
+                </div>
+             </div>
+         </section>
+         <!-- Contact Section  -->
+         <section id="contact" class="section">
+          <div class="contact">
+             <div class="contact-card">
+                <div class="contact-card-content">
+                   <h3>Ready to Collaborate?</h3>
+                   <p>I'm always open to discussing AI/ML & GenerativeAI projects, ideas, or opportunities.</p>
+                   <button class="open-contact-panel">
+                     <span class="material-symbols-rounded">chat</span>
+                     Send Message
+                   </button>
+                </div>
+                <div class="contact-card-decoration">
+                   <span class="material-symbols-rounded contact-icon">mail</span>
+                </div>
+             </div>
+             <!-- <div class="contact-availability">
+                <span class="status-indicator online"></span>
+                <p>Currently available for freelance projects and full-time opportunities</p>
+             </div> -->
+          </div>
+        </section>
+      </div>
+      <!-- Small footer for projects column -->
+      <div class="projects-column-footer">
+        <div class="copyright">© <span id="current-year-mini">2025</span> Anaiza Tariq</div>
+        <!-- <div class="mini-links">
+          <a href="https://github.com/" target="_blank"><i class="fab fa-github"></i></a>
+          <a href="https://linkedin.com/" target="_blank"><i class="fab fa-linkedin"></i></a>
+        </div> -->
+      </div>
+    </div>
+
+    <!-- Right Column: Chat Interface -->
+    <div class="chat-column">
+      <div class="chat-container">
+        <!-- Chat Body -->
+        <div class="chat-body">
+          <!-- Welcome Section & Conversation Starters -->
+          <div class="welcome-section">
+            <h3 class="welcome-title">Welcome to my Interactive Portfolio!</h3>
+            <p class="welcome-subtitle">Dive into a realm where innovation meets creativity. Explore the extraordinary journey of my work, ignited by the power of AI.</p>
+            
+          </div>
+          <!-- Chat Messages List -->
+          <div class="chat-list">
+            <!-- Chat messages will be rendered here dynamically -->
+          </div>
+        </div>
+        <!-- Typing Area -->
+        <div class="typing-area">
+          <form action="javascript:void(0);" class="typing-form">
+            <div class="input-wrapper">
+              <input type="text" placeholder="Ask me anything about my portfolio..." class="typing-input" required />
+              <button id="send-message-button" class="icon material-symbols-rounded">send</button>
+            </div>
+            <div class="action-buttons">
+              <span id="theme-toggle-button" class="icon material-symbols-rounded">light_mode</span>
+              <span id="delete-chat-button" class="icon material-symbols-rounded">delete</span>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact Side Panel (Collapsible) -->
+  <div class="contact-side-panel">
+    <div class="contact-panel-content">
+      <button class="contact-panel-close material-symbols-rounded">close</button>
+      <h2 class="contact-title">Get In Touch</h2>
+      <p class="contact-subtitle">Let's collaborate on your next GenerativeAI project!</p>
+      
+      <form class="contact-form">
+        <div class="form-group">
+          <label for="name">Your Name</label>
+          <div class="input-with-icon">
+            <span class="material-symbols-rounded">person</span>
+            <input type="text" id="name" name="name" placeholder="Enter your name" required>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <div class="input-with-icon">
+            <span class="material-symbols-rounded">email</span>
+            <input type="email" id="email" name="email" placeholder="Enter your email" required>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="subject">Subject</label>
+          <div class="input-with-icon">
+            <span class="material-symbols-rounded">subject</span>
+            <input type="text" id="subject" name="subject" placeholder="What's this about?">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" placeholder="Tell me about your project or inquiry" rows="5" required></textarea>
+          <div class="character-count"><span id="char-count">0</span>/500</div>
+        </div>
+        
+        <button type="submit" class="contact-submit-btn">
+          <span class="material-symbols-rounded">send</span>
+          Send Message
+        </button>
+      </form>
+      
+      <div class="contact-info">
+        <div class="contact-method">
+          <span class="material-symbols-rounded">mail</span>
+          <a href="mailto:anaiza@example.com">anaiza@example.com</a>
+        </div>
+        <!-- <div class="contact-method">
+          <span class="material-symbols-rounded">schedule</span>
+          <span>Available: Mon-Fri, 9am-6pm (PST)</span>
+        </div> -->
+      </div>
+    </div>
+  </div>
+  
+  
+
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+  
+</body>
+</html>

@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Portfolio Data</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        /* General Styles */
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400..700&display=swap');
+
+        body {
+            font-family: 'Roboto Condensed', sans-serif;
+            background: linear-gradient(145deg, rgba(46, 49, 91, 0.95) 0%, rgba(16, 20, 44, 0.98) 100%);
+            color: #ffffff;
+        }
+
+        h1 {
+            font-family: 'Oswald', sans-serif;
+            font-weight: 500;
+            font-size: 2rem;
+            color: #66a3ff;
+            margin-bottom: 20px;
+        }
+
+        /* Form Container */
+        .form-container {
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+
+        .form-container, .form-control{
+            background: #4c4b5289;
+            border: 1px solid #4c4b52cf;
+            border-radius: 8px;
+        }
+
+        .form-control::placeholder {
+  color: #b6bdcb68 !important;
+  opacity: 1;
+  font-weight: 400 !important;     
+  font-size: 0.965rem !important;    
+  letter-spacing: 0.01em;
+}
+
+.form-control,
+.form-container {
+  border: 1px solid #4c4b52cf !important;  
+  box-shadow: none !important;
+}
+
+.form-control {
+  color: #bcc4d2 !important; 
+}
+
+.form-control:focus{
+ background-color: #4c4b5277 !important;
+ color: #bcc4d2 !important;
+}
+        /* Buttons */
+        .btn-primary {
+            background-color: #0056b3;
+            border: none;
+            font-size: 1.15rem;
+            font-family: 'Oswald', sans-serif;
+        }
+        .btn-primary:hover {
+            background-color: #004494;
+        }
+    
+        /* Data table styling */
+        .data-table-container {
+            margin-top: 20px;
+            background: #4c4b5289;
+            border: 1px solid #4c4b5289;
+            border-radius: 20px;
+            padding: 25px;
+        }
+        .table th, .table td {
+            /* color: #ccc; */
+            vertical-align: start;
+        }
+
+        .table thead th {
+            color: #bcc4d2;
+}
+        .table-striped tbody tr:nth-of-type(odd),
+        .table-striped tbody tr:nth-of-type(even) {
+            background-color: #7b798463;
+        }
+       
+        /* Modal & Offcanvas  */
+        .offcanvas, .modal-content {
+            background-color: #59565ffd;
+            color: #ccc;
+        }
+        .btn-close {
+            filter: invert(1);
+        }
+        
+        /* Link styling for "show more" */
+        /* .view-full-desc {
+            font-size: 0.9rem;
+            text-decoration: none;
+        }
+        .view-full-desc:hover {
+            text-decoration: underline;
+        }  */
+
+        /* Youtube/video links */
+        .table a[target="_blank"] { color: #8eb9c7 !important; }
+.table a[target="_blank"]:hover { color: #b9d4de !important; }
+
+/* "Show more" link */
+
+.view-full-desc { color: #c9ad7f !important; }
+.view-full-desc:hover { color: #f4e7c9 !important; }
+
+    </style>
+</head>
+<body>
+    <div class="container py-5">
+        <!-- form section -->
+        <div class="row justify-content-center">
+            <h1 class="text-center">Portfolio Projects Dashboard</h1>
+            <!-- Add Data Form -->
+            <div class="form-container col-md-8 col-10- mt-3">
+                <form id="add-data-form" class="mb-4">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="title" class="form-label">Project Title</label>
+                                <input type="text" id="title" name="title" class="form-control" required placeholder="Enter project title">
+                            </div>
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Description</label>
+                                <textarea id="description" name="description" class="form-control" rows="5" required placeholder="Describe your project"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="video" class="form-label">Video URL</label>
+                                <input type="text" id="video" name="video" class="form-control" placeholder="https://...">
+                            </div>
+                            <div class="mb-3">
+                                <label for="tagline" class="form-label">Tagline</label>
+                                <input type="text" id="tagline" name="tagline" class="form-control" placeholder="E.g. Fastest Chatbot">
+                            </div>
+                            <div class="mb-3">
+                                <label for="techTags" class="form-label">Tech Tags (comma-separated)</label>
+                                <input type="text" id="techTags" name="techTags" class="form-control"  placeholder="Python, Flask">
+                            </div>
+                            <!-- <div class="mb-3">
+                                <label for="image" class="form-label">Image URL</label>
+                                <input type="text" id="image" name="image" class="form-control">
+                            </div> -->
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="d-grid  mt-2">
+                                <button type="submit" class="btn btn-primary">Add Project</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+
+        <!-- Data Table -->
+        <div class="row justify-content-center data-table-container">
+            <div class="col-md-10 col-12">
+                <table id="dataTable" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Description</th>
+                            <th>Video</th>
+                            <!-- <th>Image</th> -->
+                            <th>Tagline</th>
+                            <th>Tech Tags</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in data %}
+                        <tr data-index="{{ loop.index0 }}">
+                            <td>{{ row['project title'] }}</td>
+                            <!-- <td>{{ row['description'] }} </td> -->
+                            <td>
+                                <span>
+                                  {{ row['description'][:80] }}{% if row['description']|length > 80 %}...{% endif %}
+                                </span>
+                                {% if row['description']|length > 80 %}
+                                  <a href="#" class="view-full-desc text-primary" 
+                                     data-bs-toggle="modal" 
+                                     data-bs-target="#descModal" 
+                                     data-desc="{{ row['description'] }}" 
+                                     style="font-size: 0.9em;">show more</a>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if row['video'] %}
+                                <a href="{{ row['video'] }}" target="_blank">{{ row['video'] }}</a>
+                                {% else %}
+                                N/A
+                                {% endif %}
+                            </td>
+                            <!-- <td>{{ row['image'] }}</td> -->
+                            <td>{{ row['tagline'] }}</td>
+                            <td>{{ row['techTags'] }}</td>
+                        
+                            <td>
+                                <button class="btn btn-sm btn-warning editBtn" title="Edit"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-sm btn-danger deleteBtn" title="Delete"><i class="fas fa-trash-alt"></i></button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+     <!-- offcanvas editing -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="editOffcanvas" aria-labelledby="editOffcanvasLabel">
+    <div class="offcanvas-header">
+        <h5 id="editOffcanvasLabel">Edit Entry</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <form id="edit-form">
+            <div class="mb-3">
+                <label for="editTitle" class="form-label">Title</label>
+                <textarea class="form-control" id="editTitle" rows="3"></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="editDescription" class="form-label">Description</label>
+                <textarea class="form-control" id="editDescription" rows="3"></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="editVideo" class="form-label">Video URL</label>
+                <textarea class="form-control" id="editVideo" rows="3"></textarea>
+            </div>
+            <!-- <div class="mb-3">
+                <label for="editImage" class="form-label">Image Path</label>
+                <textarea class="form-control" id="editImage" rows="3"></textarea>
+            </div> -->
+             <div class="mb-3">
+                <label for="editTagline" class="form-label">Tagline</label>
+                <textarea class="form-control" id="editTagline" rows="3"></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="editTechTags" class="form-label">techTags</label>
+                <input  class="form-control" id="editTechTags">
+            </div>
+            <input type="hidden" id="editRowIndex">
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+        </form>
+    </div>
+</div>
+<!-- modal popup for msg -->
+<div class="modal fade" id="editSuccessModal" tabindex="-1" aria-labelledby="editSuccessModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editSuccessModalLabel">Success</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="editSuccessMessage">Your changes have been saved successfully!</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- modal for show description-->
+<div class="modal fade" id="descModal" tabindex="-1" aria-labelledby="descModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="descModalLabel">Project Description</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="descContent">
+          <!-- Description will load here -->
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+
+// with offcanvas editing
+$(document).ready(function () {
+    const table = $('#dataTable').DataTable({
+        "order": [[2, 'desc']],
+        "columnDefs": [
+            { "type": "date", "targets": 2 }
+        ]
+    });
+
+    
+    // Handle Edit Button Click - Open Off-Canvas
+$('#dataTable').on('click', '.editBtn', function () {
+    const row = $(this).closest('tr');
+    const rowIndex = table.row(row).index(); // Get row index
+
+    // Get current values from table
+    const title = row.find('td:eq(0)').text();
+    const description = row.find('td:eq(1)').text();
+    const video = row.find('td:eq(2)').text();
+    // const image = row.find('td:eq(3)').text(); 
+    const tagline = row.find('td:eq(3)').text();
+    const techTags = row.find('td:eq(4)').text();
+
+    // Populate the off-canvas form
+    $('#editTitle').val(title);
+    $('#editDescription').val(description);
+    $('#editVideo').val(video);
+    // $('#editImage').val(image); 
+    $('#editTagline').val(tagline);
+    $('#editTechTags').val(techTags);
+    $('#editRowIndex').val(rowIndex); // Store row index in hidden field
+
+    // Open the off-canvas
+    const offCanvas = new bootstrap.Offcanvas(document.getElementById('editOffcanvas'));
+    offCanvas.show();
+});
+
+// Handle Form Submission for Editing (With AJAX)
+$('#edit-form').on('submit', function (e) {
+    e.preventDefault();
+    const rowIndex = $('#editRowIndex').val();
+    const title = $('#editTitle').val();
+    const description = $('#editDescription').val();
+    const video = $('#editVideo').val();
+    // const image = $('#editImage').val(); 
+    const tagline = $('#editTagline').val();
+    const techTags = $('#editTechTags').val();
+
+    if (title && description) {
+        $.ajax({
+            url: '/add_data',  // Backend route for editing
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ action: 'edit', rowIndex, title, description, video,  tagline, techTags }),
+            success: function (response) {
+                // Alert success message
+                $('#editAlert').removeClass('d-none alert-danger').addClass('alert-success').text(response.message);
+
+
+                // Update the table row dynamically
+                table.cell(rowIndex, 0).data(title).draw();
+                table.cell(rowIndex, 1).data(description).draw();
+                table.cell(rowIndex, 2).data(video).draw();
+                // table.cell(rowIndex, 3).data(image).draw(); 
+                table.cell(rowIndex, 3).data(tagline).draw();
+                table.cell(rowIndex, 4).data(techTags).draw();
+
+                // Close the off-canvas after saving
+                const offCanvasEl = document.getElementById('editOffcanvas');
+                const offCanvasInstance = bootstrap.Offcanvas.getInstance(offCanvasEl);
+                offCanvasInstance.hide();
+
+                // Update modal message and show the modal
+                $('#editSuccessMessage').text(response.message);
+                const successModal = new bootstrap.Modal(document.getElementById('editSuccessModal'));
+                successModal.show();
+
+                 // Update the cards by calling the async function (no blocking)
+                loadProjectCards();  // Calling our async function; we don't need to await it here unless necessary
+            },
+            error: function (xhr) {
+                alert('Error: ' + xhr.responseJSON.message);
+            }
+        });
+    }
+});
+
+
+// Handle Add Data Form Submission (With AJAX)
+$('#add-data-form').on('submit', function (e) {
+    e.preventDefault();
+    const title = $('#title').val();
+    const description = $('#description').val();
+    const video = $('#video').val();
+    // const image = $('#image').val(); 
+    const tagline = $('#tagline').val();
+    const techTags = $('#techTags').val();
+
+    $.ajax({
+        url: '/add_data',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ action: 'add', title, description, video,  tagline, techTags }),
+        success: function (response) {
+            alert(response.message);
+
+            // Dynamically add the new row to DataTable without reload
+            const videoLink = video ? `<a href="${video}" target="_blank">${video}</a>` : 'N/A';
+            const rowNode = table.row.add([
+                title,
+                description,
+                videoLink,
+                // image, 
+                tagline,
+                techTags,
+                `<button class="btn btn-sm btn-warning editBtn" title="Edit"><i class="fas fa-edit"></i></button>
+                <button class="btn btn-sm btn-danger deleteBtn" title="Delete"><i class="fas fa-trash-alt"></button>`
+            ]).draw(false).node();
+
+            // Reset form fields
+            $('#add-data-form')[0].reset();
+
+             // Update the cards by calling the async function (no blocking)
+            loadProjectCards();  // Calling our async function; we don't need to await it here unless necessary
+        },
+        error: function (xhr) {
+            alert('Error: ' + xhr.responseJSON.message);
+        }
+    });
+});
+
+// delete row functionality
+$('#dataTable').on('click', '.deleteBtn', function () {
+    const $row = $(this).closest('tr');
+    // Use DataTables API to get the row index reliably:
+    const rowIndex = table.row($row).index();
+    if (confirm('Are you sure you want to delete this entry?')) {
+        $.ajax({
+            url: '/add_data',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ action: 'delete', rowIndex }),
+            success: function (response) {
+                alert(response.message);
+                // Remove the row dynamically using DataTables API
+                table.row($row).remove().draw();
+
+                 // Update the cards by calling the async function (no blocking)
+                loadProjectCards();  // Calling our async function; we don't need to await it here unless necessary
+            },
+            error: function (xhr) {
+                alert('Error: ' + xhr.responseJSON.message);
+            }
+        });
+    }
+});
+});
+
+// desc modal
+const descModal = document.getElementById('descModal');
+  descModal.addEventListener('show.bs.modal', function (event) {
+    const triggerLink = event.relatedTarget;
+    const fullDesc = triggerLink.getAttribute('data-desc');
+    const modalBody = descModal.querySelector('#descContent');
+    modalBody.textContent = fullDesc;
+  });
+
+
+    </script>
+</body>
+</html>
