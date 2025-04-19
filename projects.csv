@@ -6,12 +6,13 @@ RAG-Powered PDF Document Chatbot,"Built an intuitive Flask-based web app that le
 Data Processing: PDFLoader,Storage: Vector Databases",https://youtu.be/bBYL2wyNFLg,Chat with PDFs,"Vector Search,LLM,PDF Chatbot"
 Career Path Recommender - Find Your Ideal Learning Journey,"A Flask-based web app designed to help students and learners choose the right career path. Users can enter their current skill level and their goal, and the system identifies the gap between them. Based on this gap, the app recommends multiple courses along with a structured roadmap to help them achieve their target.Additionally, for those with no prior skills, the system provides a step-by-step learning path to guide them from scratch to expertise in their chosen field. This makes career planning easier and more structured for learners.Tech Stack:Programming Language: Python, Web Framework: Flask, Frontend: HTML, CSS, JavaScript, Bootstrap, AI & LLM: OPENAI GPT4o-mini, Vectorizer: TFIDF vectorizer ",https://youtu.be/PQF9JM99Qvs,"Learn & Grow
 ","AI,NLP,Career Recommendation"
- Invoice Generator ,"
+ Invoice Generator ,"Creating a professional invoice can feel overwhelming—especially for those with little to no design or formatting experience. That’s exactly what inspired me to build this AI-powered invoice generator using Flask, which makes the whole process smooth and intuitive.
+
+Whether the user speaks their requirements or types them, the app listens (via Whisper for speech-to-text) or reads, and then smartly extracts all the necessary invoice details using Gemini 2.0. It even detects missing fields and adds placeholders so the user can quickly fill in or adjust the data. A clean, editable form is presented for review and changes—once finalized, a polished, professional PDF invoice is generated using ReportLab.
+
+What makes this tool special is how effortlessly it empowers someone with zero design or technical skills to generate a fully formatted invoice. In just a few minutes, with nothing more than raw input—voice or text—they get a document that looks like it was made by a pro.  Built with: Flask, Python, HTML, CSS, JS, Bootstrap, OpenAI Whisper, Hugging Face, Gemini Flash, ReportLab.","
                                 
-                                  Creating a professional invoice can feel overwhelming—especially for those with ...
                                 
+                             https://youtu.be/u8frjGcjpDU
                                 
-                                  show more
-                                
-                            ","
-                             https://youtu.be/u8frjGcjpDU", Generate Invoices with Just Your Voice or Text,"Flask, STT, Gemini, PDF"
+                            ", Generate Invoices with Just Your Voice or Text,"Flask, STT, Gemini, PDF"
