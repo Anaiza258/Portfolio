@@ -1,14 +1,16 @@
+
 from flask import Flask, request, jsonify, render_template
 import google.generativeai as genai
 import pandas as pd
 from dotenv import load_dotenv
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
 import os
 import json
 import re 
 from datetime import datetime
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
 
 # Load the environment variables
 load_dotenv()
@@ -16,12 +18,15 @@ load_dotenv()
 # API initialization
 genai.configure(api_key=os.environ["GEMINI_API_KEY"])
 
-EMAIL_ADDRESS = os.getenv("EMAIL_ADDRESS")  # Your Gmail address
-APP_PASSWORD = os.getenv("APP_PASSWORD")  # Your Gmail App Password
+# for smtp email id and app password 
+EMAIL_ADDRESS = os.getenv("EMAIL_ADDRESS")  
+APP_PASSWORD = os.getenv("APP_PASSWORD")  
+
 
 # App initialization
 app = Flask(__name__)
 
+# Load and read CSV
 # Load and initialize data
 csv_file = os.path.join(os.getcwd(), "projects.csv")
 
@@ -30,11 +35,147 @@ if not os.path.exists(csv_file):
 else:
     df = pd.read_csv(csv_file, encoding='utf-8', on_bad_lines='skip')
 
+df.columns = df.columns.str.strip() 
+# Ensure techTags column and remove potential image column if exists 
+if 'techTags' not in df.columns:
+    df['techTags'] = ""
+if 'image' in df.columns:
+    df.drop(columns=['image'], inplace=True)
+df['techTags'] = df['techTags'].fillna("").astype(str)
+
+# Define a file to store chat/log messages
+CHAT_LOG_FILE = "chat_logs.json" 
+
+# user query log
+def log_query(endpoint, query):
+    """
+    Log the user query along with endpoint and timestamp in a JSON file.
+    """
+    log_entry = {
+        "endpoint": endpoint,
+        "query": query,
+        "timestamp": datetime.now().strftime("%y-%m-%d %H:%M:%S"),
+    }
+    logs = [] 
+    if os.path.exists(CHAT_LOG_FILE):
+        try:
+            with open(CHAT_LOG_FILE, "r", encoding="utf-8") as f:
+                logs = json.load(f)
+        except json.JSONDecodeError:
+            logs = []
+    logs.append(log_entry)
+    try:
+        with open(CHAT_LOG_FILE, "w", encoding="utf-8") as f:
+            json.dump(logs, f, indent=4, ensure_ascii=False)
+    except Exception as e:
+        print(f"Error logging query: {e}")
+
+# Add Data route (CRUD)
+@app.route('/add_data', methods=['GET', 'POST'])
+def add_data():
+    global df
+
+    if request.method == 'POST':
+        try:
+            # Get JSON data from AJAX request
+            data = request.get_json()
+
+            if not data:
+                return jsonify({'status': 'error', 'message': 'Invalid request data'}), 400
+            # Handle Add Action
+            if data['action'] == 'add':
+                title = data['title']
+                description = data['description']
+                video = data['video']
+                # image = data['image']  
+                tagline = data['tagline']
+                tech_tags = data['techTags']
+
+                # Add new row to DataFrame
+                new_row = {
+                    'project title': title,
+                    'description': description,
+                    'video': video,
+                    # 'image': image, 
+                    'tagline': tagline,
+                    'techTags': tech_tags,
+                }
+                df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
+                df.to_csv(csv_file, index=False, encoding='utf-8')
+
+                # Update LLM with new data
+                query_gemini_llm("")  
+
+                return jsonify({'status': 'success', 'message': 'Project added and LLM updated successfully!'})
+
+            # Handle Edit Action
+            elif data['action'] == 'edit':
+                row_index = data.get('rowIndex')
+                title = data.get('title')
+                description = data.get('description')
+                video = data.get('video', '')
+                # image = data.get('image', '') 
+                tagline = data.get('tagline', '')
+                tech_tags = data.get('techTags', '')
+
+                if row_index is None or not title or not description:
+                    return jsonify({'status': 'error', 'message': 'Invalid edit data.'}), 400
+
+                # Update the specific row in DataFrame
+                row_index = int(row_index)
+                df.loc[row_index, 'project title'] = title
+                df.loc[row_index, 'description'] = description
+                df.loc[row_index, 'video'] = video
+                # df.loc[row_index, 'image'] = image 
+                df.loc[row_index, 'tagline'] = tagline
+                df.loc[row_index, 'techTags'] = tech_tags
+
+                # Save updated data to CSV
+                df[['project title', 'description', 'video','tagline', 'techTags']].to_csv(csv_file, index=False)
+
+               # Update LLM with updated data
+                query_gemini_llm("") 
+
+                return jsonify({'status': 'success', 'message': 'Project updated and LLM updated successfully!'})
+
+            # Handle Delete Action
+            elif data['action'] == 'delete':
+                row_index = data.get('rowIndex')
+
+                if row_index is None:
+                    return jsonify({'status': 'error', 'message': 'Invalid delete data.'}), 400
+
+                # Drop the row from DataFrame
+                row_index = int(row_index)
+                df = df.drop(row_index).reset_index(drop=True)
+
+                # Save updated data to CSV
+                df[['project title', 'description', 'video', 'tagline', 'techTags']].to_csv(csv_file, index=False)
+
+                 # Update LLM with updated data
+                query_gemini_llm("") 
+
+                return jsonify({'status': 'success', 'message': 'Project deleted and LLM updated successfully!'})
+
+            else:
+                return jsonify({'status': 'error', 'message': 'Invalid action.'}), 400
+
+        except Exception as e:
+            return jsonify({'status': 'error', 'message': str(e)}), 500
+
+    # Handle GET request - render HTML template with DataFrame data
+    data =  df.to_dict(orient='records')
+    return render_template('add_data_dashboard.html', data=data)
+
+
 # This route processes starter/personal data queries only. It is only triggered
 # when the frontend explicitly calls the '/process-starter-question' endpoint.
 @app.route('/process-starter-question', methods=['POST'])
 def process_starter_question_route():
     user_query = request.json.get('message', '').strip()
+
+     # Log the query
+    log_query("/process-starter-question", user_query)
     try:
         answer = process_starter_question(user_query)
         # Construct a simple JSON response.
@@ -42,14 +183,13 @@ def process_starter_question_route():
             "Project Title": "",
             "Description": answer,
             "Video": "",
-            "Image": []
+            # "Image": [] 
         }
         return jsonify(response_data)
     except Exception as e:
         print(f"Starter question error: {e}")
         return jsonify({"error": "An error occurred while processing your starter query."}), 500
     
-
 # Starter question function – processes portfolio-based questions.
 def process_starter_question(user_query):
     # Build a prompt providing portfolio data and conversation samples, then pass the query.
@@ -97,7 +237,7 @@ I'm committed to lifelong learning and professional growth, and I continuously s
     content = response.candidates[0].content.parts[0].text
 
     # Clean any markdown formatting.
-    content = re.sub(r"```|```json", "", content).strip()
+    content = re.sub(r"```|```json", "", content).strip() 
     return content
 
 
@@ -105,7 +245,10 @@ I'm committed to lifelong learning and professional growth, and I continuously s
 # It is invoked when the frontend calls the '/generate-response' endpoint.
 @app.route('/generate-response', methods=['POST'])
 def generate_response():
-    user_query = request.json.get('message', '').strip()    
+    user_query = request.json.get('message', '').strip()  
+
+     # Log the query
+    log_query("/generate-response", user_query)  
     try:
         result = query_gemini_llm(user_query)
         # print("Parsed Result:", result)
@@ -234,8 +377,8 @@ def parse_llm_response(content):
         result = json.loads(content)
         # Hardcode empty "Project Title" if it's null or not provided.
         result["Project Title"] = (result.get("Project Title") or "").strip()
-        # Standardize DataFrame column names.
-        df.columns = df.columns.str.strip().str.lower()
+        # Standardize DataFrame column names
+        # df.columns = df.columns.str.strip().str.lower()
         
         # Attempt to match the project title with our dataset.
         project_row = df[df['project title'].str.strip() == result["Project Title"].strip()]
@@ -266,12 +409,10 @@ def parse_llm_response(content):
 def index():
     return render_template('index.html')
 
-
 # images path
 # @app.route('/static/images/<path:filename>')
 # def serve_images(filename):
 #     return send_from_directory('static/images', filename)
-
 
 # Get projects list.
 @app.route('/get-projects')
@@ -297,7 +438,8 @@ def get_projects():
         return jsonify({"error": str(e)}), 500
 
 
-# Submit Contact
+
+# Submit Contact (email transfer)
 @app.route('/submit-contact', methods=['POST'])
 def submit_contact():
     data = request.get_json()
@@ -341,8 +483,8 @@ def submit_contact():
         return jsonify({"error": f"An error occurred while sending the email: {str(e)}"}), 500
 
 
-
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 8000))  # Koyeb provides PORT dynamically
     app.run(host="0.0.0.0", port=port)
+
 
