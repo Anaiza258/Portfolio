@@ -438,7 +438,6 @@ def get_projects():
         return jsonify({"error": str(e)}), 500
 
 
-
 # Submit Contact (email transfer)
 @app.route('/submit-contact', methods=['POST'])
 def submit_contact():
