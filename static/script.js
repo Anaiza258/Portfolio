@@ -1,9 +1,8 @@
 const typingForm = document.querySelector(".typing-form");
 const chatContainer = document.querySelector(".chat-list");
-// const suggestions = document.querySelectorAll(".suggestion");
 const toggleThemeButton = document.querySelector("#theme-toggle-button");
 const deleteChatButton = document.querySelector("#delete-chat-button");
-// Call this function when the page loads
+//  this function calls when the page loads
 const projectsGrid = document.querySelector('.projects-grid');
 
 
@@ -127,11 +126,15 @@ const generateAPIResponse = async (incomingMessageDiv) => {
   const textElement = incomingMessageDiv.querySelector(".text"); // Getting text element
 
   try {
-    // Send a POST request to the Flask backend with the user's message
+
+    // saved chat history from local storage
+    const chatHistory = localStorage.getItem("saved-chats") || "";
+
+    // POST request with the user's message
     const response = await fetch('/generate-response', {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message: userMessage }),
+      body: JSON.stringify({ message: userMessage, history : chatHistory }),
     });
 
     const data = await response.json();
@@ -159,10 +162,10 @@ const generateAPIResponse = async (incomingMessageDiv) => {
     }
     
     isResponseGenerating = false;
-    localStorage.setItem("saved-chats", chatContainer.innerHTML); // Save chats to local storage
+    localStorage.setItem("saved-chats", chatContainer.innerHTML); 
     scrollChatToBottom();
 
-  } catch (error) { // Handle error
+  } catch (error) {
     isResponseGenerating = false;
     incomingMessageDiv.classList.remove("loading");
     incomingMessageDiv.innerHTML = `
@@ -192,7 +195,7 @@ const createProjectResponseCard = (data) => {
     }
   }
   
-  // Format the video if available
+  // Format the video available
   let videoHTML = '';
   if (data["Video"] && data["Video"].trim() !== "") {
     const videoIdMatch = data["Video"].match(

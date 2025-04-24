@@ -246,11 +246,15 @@ I'm committed to lifelong learning and professional growth, and I continuously s
 @app.route('/generate-response', methods=['POST'])
 def generate_response():
     user_query = request.json.get('message', '').strip()  
+    chat_history = request.json.get('history', '').strip()
 
      # Log the query
     log_query("/generate-response", user_query)  
     try:
-        result = query_gemini_llm(user_query)
+        # prompt to maintain conversation chain for llm
+        conversational_chain = f"Conversation history: \n{chat_history}\n\n User's new query \n{user_query}\n\n"
+        
+        result = query_gemini_llm(conversational_chain)
         # print("Parsed Result:", result)
         response_data = {
             "Project Title": result.get("Project Title", ""),
@@ -301,8 +305,10 @@ def query_gemini_llm(user_query):
         "2. Projects Data:\n" 
         "The following is a dataset (in JSON format) containing details about various projects:\n"
         f"{projects_data}\n\n"
+        "You have the chat history to make the responses more conversational."
         "Please examine the user's question below and decide which data source is most appropriate to answer it. "
         "If the question is about my background, profile, or personal information, answer using the Personal Profile Data. "
+        "If someone says who i am like person's query is about to know who is the gye he his that query. it is not about anaiza. so make sure you understand the context of query very well."
         "When answering, speak as if you ARE me (Anaiza) - use first person and present information as if I'm personally sharing my professional experience.\n\n"
         
         "When you answer personal questions, leave \"Project Title\" empty and only fill in \"Description\" with a professional response in my voice. "
@@ -483,7 +489,8 @@ def submit_contact():
 
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 8000))  # Koyeb provides PORT dynamically
-    app.run(host="0.0.0.0", port=port)
+    # port = int(os.environ.get("PORT", 8000))  # Koyeb provides PORT dynamically
+    # app.run(host="0.0.0.0", port=port)
+    app.run(debug=True)
 
 
