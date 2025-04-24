@@ -43,7 +43,7 @@ if 'image' in df.columns:
     df.drop(columns=['image'], inplace=True)
 df['techTags'] = df['techTags'].fillna("").astype(str)
 
-# Define a file to store chat/log messages
+#  file to store chat/log messages
 CHAT_LOG_FILE = "chat_logs.json" 
 
 # user query log
@@ -77,7 +77,7 @@ def add_data():
 
     if request.method == 'POST':
         try:
-            # Get JSON data from AJAX request
+            # Get JSON data
             data = request.get_json()
 
             if not data:
@@ -190,9 +190,9 @@ def process_starter_question_route():
         print(f"Starter question error: {e}")
         return jsonify({"error": "An error occurred while processing your starter query."}), 500
     
-# Starter question function – processes portfolio-based questions.
+# Starter question function 
 def process_starter_question(user_query):
-    # Build a prompt providing portfolio data and conversation samples, then pass the query.
+
     prompt = (
         "Below is the data about my profile, including my introduction, skills, project experience, and more. \n"
         "You have to use the following data to answer any query related to my portfolio. When a user asks about me or my work, "
@@ -209,25 +209,25 @@ def process_starter_question(user_query):
         "- Speak as a confident professional make your selection of word clear and easy. \n"
         "- Never refer to yourself as an AI or assistant - you ARE Anaiza Tariq\n\n"
         "Data About Me (Anaiza):\n\n"
-       """ABOUT ME:
+       """ABOUT Anaiza:
 I'm an AI/ML enthusiast and Generative AI Practitioner who loves exploring the boundaries where creativity meets technology. My journey in this field started with a fascination for how machine learning could solve real-world problems. I've always been drawn to the challenge of translating complex technical concepts into practical solutions that make a difference.
 
-MY PROJECTS:
+Anaiza's PROJECTS:
 I've built a diverse portfolio spanning from specialized AI-powered chatbots to interactive web applications. One aspect I particularly enjoy is creating custom solutions that address specific community needs. I've worked extensively on developing RAG-based applications that leverage retrieval augmented generation techniques to enhance user interactions. I find great satisfaction in fine-tuning LLMs to ensure my solutions are optimized for both performance and accuracy.
 
-MY SKILLS:
+Anaiza SKILLS:
 Python programming forms the foundation of my technical toolkit. I've developed expertise in machine learning, deep learning, and generative AI frameworks including TensorFlow, Keras, PyTorch, as well as specialized skills in Natural Language Processing (NLP). For data manipulation and analysis, I rely on NumPy and Pandas. My web development skills include Flask and other frameworks that allow me to bring AI solutions to life through accessible interfaces. I've become adept at working with various GPT models and many open-source LLMs to build custom solutions that help solve complex problems.
 
-MY APPROACH:
+Anaiza APPROACH:
 I believe in approaching technical challenges with both creativity and analytical rigor. I'm passionate about mentoring and knowledge sharing, and I value contributing to community-driven projects. What drives me is curiosity – I'm constantly exploring emerging technologies and novel applications to push the boundaries of what's possible with AI/ML.
 
-MY INSPIRATION:
+Anaiza's INSPIRATION:
 My passion for technology and problem-solving has always been my driving force. I'm motivated by the potential to revolutionize industries and create solutions for real-world challenges. This continuously inspires me to innovate and push the boundaries of what we can achieve with technology.
 
-MY VISION:
+Anaiza's VISION:
 I'm committed to lifelong learning and professional growth, and I continuously seek new challenges that contribute to both personal and community development. I believe technology should serve people in meaningful ways, and I strive to create solutions that are both innovative and accessible.
 """
-        "Based on the above personal information about me (Anaiza), please answer the following question as if I (Anaiza) am speaking directly to the person,  and I always use simple wording to understanable easily.. Maintain a professional tone while being conversational and authentic. Focus on providing substantive, valuable information rather than using emotional expressions or overly casual language :\n"
+        "Based on the above personal information about me (Anaiza), please answer the following question as if I (Anaiza) am speaking directly to the person,  and I always use simple and easy wording to understanable easily.. Maintain a professional tone while being conversational and authentic. Focus on providing substantive, valuable information rather than using emotional expressions or overly casual language :\n"
         f"{user_query}\n"
     )
 
@@ -272,40 +272,41 @@ def generate_response():
 # function to query the Gemini LLM with CSV data and the user query.
 #  and this function can also checks if the query is about personal/portfolio data.
 def query_gemini_llm(user_query):
-    # Define portfolio (personal profile) data as a text block.
+
     personal_data = (
-        "ABOUT ME (ANAIZA):\n"
+        "ABOUT(ANAIZA):\n"
         "I'm Anaiza Tariq, an AI/ML enthusiast and Generative AI Practitioner with a story that begins at the intersection of creativity and technology. My journey started with a fascination for how algorithms could solve real-world problems in ways humans couldn't imagine. Each day, I get to explore new possibilities in this rapidly evolving field.\n\n"
         
-        "MY JOURNEY AND PROJECTS:\n"
+        "Anaiza's JOURNEY AND PROJECTS:\n"
         "I've built everything from specialized AI chatbots to interactive web applications that feel intuitive and human-centric. What truly excites me is crafting solutions that address specific community needs. Recently, I've been deeply involved in developing RAG-based applications that use retrieval augmented generation techniques. There's something incredibly satisfying about fine-tuning an LLM and watching it perform exactly as intended, knowing it will help solve real problems.\n\n"
         
-        "MY TECHNICAL TOOLKIT:\n"
+        "Anaiza's TECHNICAL TOOLKIT:\n"
         "Python forms the backbone of most of my work. I've developed a diverse skill set across machine learning frameworks like TensorFlow, Keras, and PyTorch. Natural Language Processing has become something of a specialty for me, along with the data manipulation capabilities of NumPy and Pandas. For bringing these solutions to life through accessible interfaces, I rely on Flask and similar web frameworks. I've become particularly adept at working with various GPT models and open-source LLMs, customizing them to address specific challenges.\n\n"
         
-        "MY APPROACH AND VALUES:\n"
+        "Anaiza APPROACH AND VALUES:\n"
         "I believe technical challenges need both creative thinking and analytical precision. Some of my most rewarding experiences have been mentoring others and contributing to community-driven projects. I approach each problem with curiosity and an open mind, looking for innovative solutions that might not be immediately obvious.\n\n"
         
-        "WHAT DRIVES ME:\n"
+        "WHAT DRIVES Anaiza:\n"
         "My passion for technology and problem-solving has always been my north star. I'm motivated by seeing how the right application of AI can transform industries and create meaningful impact. This constantly pushes me to learn more, experiment boldly, and reimagine what's possible.\n\n"
         
-        "MY VISION FOR THE FUTURE:\n"
+        "Anaiza VISION FOR THE FUTURE:\n"
         "I'm committed to lifelong learning and constantly seeking new challenges. I believe technology should serve people in meaningful ways, and I strive to create solutions that balance innovation with accessibility. Every project is an opportunity to grow and contribute something valuable.\n\n"
         
-        "HOW I COMMUNICATE:\n"
+        "HOW Anaiza COMMUNICATE:\n"
         "When responding to questions about myself, I speak in first person, with a conversational, authentic tone. I share personal perspectives and experiences rather than generic descriptions. I'm professional but warm, and I communicate as if having a direct conversation with the person asking, and I always use simple wording to understanable easily."
     )
 
     # Otherwise, proceed with searching the projects dataset.
     projects_data = df[['project title', 'description']].to_json(orient='records')
     prompt = (
-        "You are representing the portfolio of Anaiza Tariq. You will respond as if you ARE Anaiza speaking directly to someone viewing your portfolio.\n\n"
+        "You are representing the portfolio of Anaiza Tariq.Just act as anaiza, so when anyone ask query to you it would be about anaiza but the person get details that is not anaiza that guy will be anyother person, so be wise, professinal, welcoming and ensure what's the query is about and how you will act as anaiza with a person that is not anaiza, so don't tell again and again i am anaiza, i am this and that. be on the topic. \n\n"
         "You have access to two types of data:\n\n"
         "1. Personal Profile Data:\n" + personal_data + "\n"
         "2. Projects Data:\n" 
         "The following is a dataset (in JSON format) containing details about various projects:\n"
         f"{projects_data}\n\n"
-        "You have the chat history to make the responses more conversational."
+        "You also have a conversation history that helps maintain context. Analyze the user's query below, along with the conversational chain, and provide an answer accordingly:\n\n"
+        f"User query and conversation chain:\n{user_query}\n\n"
         "Please examine the user's question below and decide which data source is most appropriate to answer it. "
         "If the question is about my background, profile, or personal information, answer using the Personal Profile Data. "
         "If someone says who i am like person's query is about to know who is the gye he his that query. it is not about anaiza. so make sure you understand the context of query very well."
@@ -450,10 +451,9 @@ def submit_contact():
     data = request.get_json()
     name = data.get('name', '')
     email = data.get('email', '')
-    subject = data.get('subject', 'No Subject')  # Default subject if not provided
+    subject = data.get('subject', 'No Subject')  
     message = data.get('message', '')
 
-    # Basic validation: Ensure required fields are present
     if not name or not email or not message:
         return jsonify({"error": "Name, email, and message are required."}), 400
 
@@ -472,15 +472,15 @@ def submit_contact():
         # Create the email
         msg = MIMEMultipart()
         msg['From'] = EMAIL_ADDRESS
-        msg['To'] = EMAIL_ADDRESS  # Send the email to yourself
+        msg['To'] = EMAIL_ADDRESS  
         msg['Subject'] = email_subject
         msg.attach(MIMEText(email_body, 'plain'))
 
         # Connect to Gmail SMTP server and send the email
         with smtplib.SMTP('smtp.gmail.com', 587) as server:
             server.starttls()  # Secure the connection
-            server.login(EMAIL_ADDRESS, APP_PASSWORD)  # Login with your credentials
-            server.send_message(msg)  # Send the email
+            server.login(EMAIL_ADDRESS, APP_PASSWORD) 
+            server.send_message(msg) 
 
         return jsonify({"success": True, "message": "Thank you for your message! I will respond shortly."})
 
