@@ -10,6 +10,7 @@ from datetime import datetime
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from supabase import create_client, Client
 
 
 # Load the environment variables
@@ -22,12 +23,30 @@ genai.configure(api_key=os.environ["GEMINI_API_KEY"])
 EMAIL_ADDRESS = os.getenv("EMAIL_ADDRESS")  
 APP_PASSWORD = os.getenv("APP_PASSWORD")  
 
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # App initialization
 app = Flask(__name__)
 
+def log_query(endpoint, query):
+    """
+    Log the user query along with endpoint and timestamp in Supabase.
+    """
+    log_entry = {
+        "endpoint": endpoint,
+        "query": query,
+        "timestamp": datetime.utcnow().isoformat(),
+    }
+    try:
+        response = supabase.table("chat_logs").insert(log_entry).execute()
+        print("Log entry inserted:", response)
+    except Exception as e:
+        print(f"Error logging query: {e}")
+
+
 # Load and read CSV
-# Load and initialize data
 csv_file = os.path.join(os.getcwd(), "projects.csv")
 
 if not os.path.exists(csv_file):
@@ -43,32 +62,37 @@ if 'image' in df.columns:
     df.drop(columns=['image'], inplace=True)
 df['techTags'] = df['techTags'].fillna("").astype(str)
 
+
+
 #  file to store chat/log messages
-CHAT_LOG_FILE = "chat_logs.json" 
+# CHAT_LOG_FILE = "chat_logs.json" 
 
 # user query log
-def log_query(endpoint, query):
-    """
-    Log the user query along with endpoint and timestamp in a JSON file.
-    """
-    log_entry = {
-        "endpoint": endpoint,
-        "query": query,
-        "timestamp": datetime.now().strftime("%y-%m-%d %H:%M:%S"),
-    }
-    logs = [] 
-    if os.path.exists(CHAT_LOG_FILE):
-        try:
-            with open(CHAT_LOG_FILE, "r", encoding="utf-8") as f:
-                logs = json.load(f)
-        except json.JSONDecodeError:
-            logs = []
-    logs.append(log_entry)
-    try:
-        with open(CHAT_LOG_FILE, "w", encoding="utf-8") as f:
-            json.dump(logs, f, indent=4, ensure_ascii=False)
-    except Exception as e:
-        print(f"Error logging query: {e}")
+# def log_query(endpoint, query):
+#     """
+#     Log the user query along with endpoint and timestamp in a JSON file.
+#     """
+#     log_entry = {
+#         "endpoint": endpoint,
+#         "query": query,
+#         "timestamp": datetime.now().strftime("%y-%m-%d %H:%M:%S"),
+#     }
+#     logs = [] 
+#     if os.path.exists(CHAT_LOG_FILE):
+#         try:
+#             with open(CHAT_LOG_FILE, "r", encoding="utf-8") as f:
+#                 logs = json.load(f)
+#         except json.JSONDecodeError:
+#             logs = []
+#     logs.append(log_entry)
+#     try:
+#         with open(CHAT_LOG_FILE, "w", encoding="utf-8") as f:
+#             json.dump(logs, f, indent=4, ensure_ascii=False)
+#     except Exception as e:
+#         print(f"Error logging query: {e}")
+
+
+
 
 # Add Data route (CRUD)
 @app.route('/add_data', methods=['GET', 'POST'])
