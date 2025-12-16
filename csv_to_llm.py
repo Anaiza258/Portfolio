@@ -256,7 +256,7 @@ I'm committed to lifelong learning and professional growth, and I continuously s
     )
 
     # Call the Gemini LLM with this prompt.
-    model = genai.GenerativeModel('gemini-2.0-flash')
+    model = genai.GenerativeModel('gemini-2.5-flash')
     response = model.generate_content(prompt)
     content = response.candidates[0].content.parts[0].text
 
@@ -388,7 +388,7 @@ def query_gemini_llm(user_query):
         f"Data: {projects_data}\n"
     )
 
-    model = genai.GenerativeModel('gemini-2.0-flash')
+    model = genai.GenerativeModel('gemini-2.5-flash')
     response = model.generate_content(prompt)
     content = response.candidates[0].content.parts[0].text
 
