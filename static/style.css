@@ -1273,19 +1273,109 @@ body {
 
 /* Responsive: adjust two columns to one on small screens */
 @media (max-width: 768px) {
+  body {
+    overflow: auto;
+  }
+
   .app-container {
     grid-template-columns: 1fr;
     grid-template-rows: auto auto;
     height: auto;
+    padding: 0.5rem;
+    gap: 0.5rem;
   }
+
+  /* Left column — natural height, scrollable */
   .projects-column {
-    height: 40vh;
+    height: auto;
+    max-height: 85vh;
+    overflow-y: auto;
+    border-radius: 12px;
   }
+
+  /* Profile section smaller on mobile */
+  .profile-name {
+    font-size: 1.6rem;
+  }
+
+  .profile-tagline {
+    font-size: 0.85rem;
+    white-space: normal;
+    text-align: center;
+  }
+
+  /* Nav items smaller */
+  .nav-item {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.2rem;
+  }
+
+  /* Skills grid — single column on mobile */
+  .skills-list {
+    grid-template-columns: 1fr;
+  }
+
+  /* Experience — reduce padding */
+  .experience-item {
+    padding: 14px 16px;
+  }
+
+  .experience-header {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .experience-right {
+    align-items: flex-start;
+  }
+
+  /* Right column — chat */
   .chat-column {
-    height: 60vh;
+    height: 90vh;
+  }
+
+  .chat-container {
+    margin: 0;
+    border-radius: 12px;
+  }
+
+  /* Project response card full width */
+  .project-response-card {
+    max-width: 100%;
+    min-width: unset;
+  }
+
+  .personal-response {
+    max-width: 100%;
+  }
+
+  /* Contact panel full width on mobile */
+  .contact-side-panel {
+    width: 100%;
+    right: -100%;
+  }
+
+  /* Typing area */
+  .typing-form .typing-input {
+    font-size: 0.9rem;
   }
 }
 
+/* Very small screens */
+@media (max-width: 400px) {
+  .profile-name {
+    font-size: 1.4rem;
+  }
+
+  .welcome-title {
+    font-size: 1.3rem;
+  }
+
+  .nav-item {
+    font-size: 0.7rem;
+    padding: 0.35rem 0.1rem;
+  }
+}
 /*  Project Response Card Styling */
 .project-response-card {
   background: var(--response-bg);
