@@ -482,7 +482,7 @@ const showInitialChatGreeting = async () => {
        <div class="chat-starters-container">
          <div class="conversation-starters">
            <button class="starter-btn" data-message="Who is Anaiza Tariq?">Who is Anaiza Tariq?</button>
-           <button class="starter-btn" data-message="What drives your passion for AI and ML?">What drives your passion for AI and ML?</button>
+           <button class="starter-btn" data-message="What drives your passion for AI?">What drives your passion for AI?</button>
            <button class="starter-btn" data-message="What are your key technical skills?">What are your key technical skills?</button>
            <button class="starter-btn" data-message="Tell me about your notable projects">Tell me about your notable projects</button>
            <button class="starter-btn" data-message="Which technologies do you work with?">Which technologies do you work with?</button>

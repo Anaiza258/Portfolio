@@ -10,6 +10,21 @@
   <!-- Include FontAwesome for social icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+
+  <style>
+    
+
+.dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+  margin: 0 10px;
+  vertical-align: middle;
+  margin-bottom: 3px;
+}
+  </style>
 </head>
 
 <body>
@@ -21,8 +36,9 @@
       <!-- Profile Section -->
       <div class="profile-section">
         <div class="profile-info">
-          <h1 class="profile-name">Anaiza Tariq</h1>
-          <p class="profile-tagline">AI/ML  &amp; Generative AI Practitioner</p>
+          <h1 class="profile-name">Anaiza Tariq</h1> 
+          <p class="profile-tagline">AI Engineer <span class="dot"></span> Turning Business Gaps into AI Solutions </p>
+
           <div class="social-links">
             <!-- <a href="https://github.com/" class="social-link"  target="_blank"  rel="noopener noreferrer" title="GitHub">
               <i class="fab fa-github"></i>
@@ -40,7 +56,7 @@
       <nav class="portfolio-nav" data-active="projects">
          <button class="nav-item active" data-section="projects">Projects</button>
          <button class="nav-item" data-section="skills">Skills</button>
-         <button class="nav-item" data-section="education">Education</button>
+         <button class="nav-item" data-section="experience">Experience</button>
          <button class="nav-item" data-section="contact">Contact</button>
       </nav>
       <!-- Content Sections Container -->
@@ -55,52 +71,98 @@
             </div>
          </section>
          <!-- Skills Section -->
-         <section id="skills" class="section">
-          <div class="skills-container">
-            <ul class="skills-list">
-              <li>
-                <strong>Programming Language:</strong> Python
-              </li>
-              <li>
-                <strong>ML/DL Libs:</strong> scikit-learn, XGBoost, TensorFlow,
-                Keras, PyTorch
-              </li>
-              <li>
-                <strong>NLP:</strong> NLTK, SpaCy
-              </li>
-              <li>
-                <strong>ML Algorithms:</strong> Linear Regression, Decision Trees,
-                Random Forests, SVM, KNN, Naive Bayes
-              </li>
-              <li>
-                <strong>Neural Networks:</strong> CNN, RNN, LSTM, GAN, Transformer,
-                Autoencoder
-              </li>
-              <li>
-                <strong>Generative AI &amp; RAG:</strong> GPT &amp; Open-source models,
-                RAG Systems
-              </li>
-              <li>
-                <strong>Chatbot Development:</strong> Custom chatbot data integration,
-                conversational design, and robust dialogue management
-              </li>
-              <li>
-                <strong>AI Web Apps:</strong> Flask for building interactive,
-                powerful AI application interfaces
-              </li>
-            </ul>
-          </div>
-         </section>
-         <!-- Education Section -->
-         <section id="education" class="section">
-             <div class="education-container">
-                <div class="education-item">
-                   <h3 class="degree">Bachelor of Computer Science</h3>
-                   <p class="institution">Virtual University of Pakistan</p>
-                   <p class="year">2022 - 2026</p>
-                </div>
-             </div>
-         </section>
+        <section id="skills" class="section">
+  <div class="skills-container">
+    <ul class="skills-list">
+      <li>
+        <strong>Programming Language:</strong> Python
+      </li>
+      <li>
+        <strong>Generative AI & LLMs:</strong> OpenAI APIs, DeepSeek, GPT & Open-source LLMs
+      </li>
+      <li>
+        <strong>Agentic AI:</strong> Custom AI Agents, LangGraph, multi-step reasoning, autonomous task execution
+      </li>
+      <li>
+        <strong>RAG Systems:</strong> RAG pipelines, embeddings, vector-based retrieval, knowledge base integration
+      </li>
+      <li>
+        <strong>Chatbot Development:</strong> Custom AI chatbots, website chatbot integration, domain-specific bots, conversational design, dialogue management
+      </li>
+      <li>
+        <strong>AI Web Apps & SaaS:</strong> End-to-end AI-powered web applications, SaaS apps built with FastAPI & Flask
+      </li>
+      <li>
+        <strong>Automation Platforms:</strong> Make.com, workflow automation, business process automation
+      </li>
+      <li>
+        <strong>AI/ML Frameworks:</strong> PyTorch, TensorFlow, Keras, Hugging Face Transformers
+      </li>
+      <li>
+        <strong>Neural Networks:</strong> CNN, RNN, LSTM, Transformer, Autoencoder
+      </li>
+      <li>
+        <strong>NLP:</strong> NLTK, SpaCy, Hugging Face NLP pipelines
+      </li>
+      <li>
+        <strong>Backend:</strong> FastAPI, Flask
+      </li>
+      <li>
+        <strong>Frontend:</strong> HTML, CSS, Bootstrap, JavaScript
+      </li>
+      <li>
+        <strong>Databases:</strong> PostgreSQL (Supabase), SQLite, Vector databases (Pinecone, Weaviate, qdrant)
+      </li>
+      <li>
+        <strong>AI Tools:</strong> Whisper (speech-to-text), ReportLab (PDF generation)
+      </li>
+    </ul>
+  </div>
+</section>
+
+         <!-- Experience Section -->
+
+       <section id="experience" class="section">
+  <div class="experience-container">
+
+    <div class="experience-item">
+      <div class="experience-header">
+        <div class="experience-left">
+          <h3 class="experience-role">AI Engineer</h3>
+          <span class="experience-company">Tecrix</span>
+        </div>
+        <div class="experience-right">
+          <span class="experience-type">Part-time</span>
+          <span class="experience-date">Dec 2025 — Present</span>
+        </div>
+      </div>
+      <ul class="experience-points">
+        <li>Identify business process gaps and architect AI-driven solutions tailored to operational needs</li>
+        <li>Build AI-powered web apps, chatbots, and automation workflows for real business use cases</li>
+      </ul>
+    </div>
+
+    <div class="experience-item">
+      <div class="experience-header">
+        <div class="experience-left">
+          <h3 class="experience-role">AI Product Engineer</h3>
+          <span class="experience-company">Myers College <span class="affiliation">(Cambridge Affiliated)</span></span>
+        </div>
+        <div class="experience-right">
+          <span class="experience-type">Part-time</span>
+          <span class="experience-date">Mar 2026 — Present</span>
+        </div>
+      </div>
+      <ul class="experience-points">
+        <li>Developed the college website from ground up — architecture, UI, and content structure rebuilt entirely</li>
+        <li>Built a comprehensive admin dashboard for internal management and operations</li>
+        <li>Integrated an AI-powered chatbot for student queries, admissions support, and real-time assistance</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
          <!-- Contact Section  -->
          <section id="contact" class="section">
           <div class="contact">
@@ -126,7 +188,7 @@
       </div>
       <!-- Small footer for projects column -->
       <div class="projects-column-footer">
-        <div class="copyright">© <span id="current-year-mini">2025</span> Anaiza Tariq</div>
+        <div class="copyright">© <span id="current-year-mini">2025</span> Anaiza Tariq - AI Product Architect</div>
         <!-- <div class="mini-links">
           <a href="https://github.com/" target="_blank"><i class="fab fa-github"></i></a>
           <a href="https://linkedin.com/" target="_blank"><i class="fab fa-linkedin"></i></a>
