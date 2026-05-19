@@ -464,7 +464,7 @@ def query_gemini_llm(user_query):
         f"Data: {projects_data}\n"
     )
 
-    model = genai.GenerativeModel('gemini-2.0-flash')
+    model = genai.GenerativeModel('gemini-2.5-flash')
     response = model.generate_content(prompt)
     content = response.candidates[0].content.parts[0].text
  
